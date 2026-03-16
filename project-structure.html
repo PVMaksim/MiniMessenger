@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>MiniMessenger — структура файлов</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    color: #e2e8f0;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 13px;
+    padding: 32px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 32px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+  }
+
+  /* ── колонка ── */
+  .col {
+    background: #1a1f2e;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 16px;
+    border-bottom: 1px solid #2d3748;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: -0.2px;
+  }
+  .col-header .icon { font-size: 16px; }
+  .col-body { padding: 12px 4px 14px 4px; }
+
+  /* ── раздел ── */
+  .section { margin-bottom: 4px; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 16px 3px 16px;
+    color: #475569;
+  }
+
+  /* ── файл ── */
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 16px;
+    border-radius: 5px;
+    line-height: 1.5;
+    transition: background .12s;
+  }
+  .file:hover { background: #243044; }
+
+  .file-icon { font-size: 13px; flex-shrink: 0; width: 18px; text-align: center; }
+  .file-name { color: #cbd5e1; flex: 1; }
+  .file-name.dim { color: #4a5568; }
+
+  /* теги */
+  .tag {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: .3px;
+    flex-shrink: 0;
+  }
+  .tag-fix  { background: #7f1d1d; color: #fca5a5; }
+  .tag-new  { background: #14532d; color: #86efac; }
+  .tag-test { background: #1e3a5f; color: #93c5fd; }
+  .tag-key  { background: #3b1f6e; color: #c4b5fd; }
+
+  /* indent */
+  .i1 { padding-left: 24px; }
+  .i2 { padding-left: 36px; }
+  .i3 { padding-left: 48px; }
+
+  /* divider */
+  .divider {
+    border: none;
+    border-top: 1px solid #2d3748;
+    margin: 8px 12px;
+  }
+
+  /* цвета заголовков */
+  .hdr-backend  { background: #1a2535; color: #7dd3fc; }
+  .hdr-frontend { background: #1c2535; color: #86efac; }
+  .hdr-mobile   { background: #1f1f2e; color: #c4b5fd; }
+  .hdr-infra    { background: #1f2020; color: #fdba74; }
+  .hdr-root     { background: #1f2535; color: #f1f5f9; }
+  .hdr-deploy   { background: #20201a; color: #fde68a; }
+
+  /* легенда */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 24px;
+    max-width: 1100px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+</style>
+</head>
+<body>
+
+<h1>📁 MiniMessenger — структура проекта</h1>
+<p class="subtitle">Полная карта файлов · теги показывают что было добавлено/исправлено</p>
+
+<div class="grid">
+
+  <!-- ═══════════════════════════════ BACKEND ═══════════════════════════════ -->
+  <div class="col">
+    <div class="col-header hdr-backend">
+      <span class="icon">⚙️</span> backend/
+    </div>
+    <div class="col-body">
+
+      <div class="section-label">Точка входа</div>
+      <div class="file i1"><span class="file-icon">📄</span><span class="file-name">server.js</span><span class="tag tag-fix">FIX</span></div>
+      <div class="file i1"><span class="file-icon">📦</span><span class="file-name">package.json</span></div>
+      <div class="file i1"><span class="file-icon">🐋</span><span class="file-name">Dockerfile</span></div>
+      <div class="file i1"><span class="file-icon">🚫</span><span class="file-name">.dockerignore</span><span class="tag tag-new">NEW</span></div>
+      <div class="file i1"><span class="file-icon">🔧</span><span class="file-name">jest.config.js</span></div>
+
+      <hr class="divider">
+      <div class="section-label">Окружение</div>
+      <div class="file i1"><span class="file-icon">🔑</span><span class="file-name">.env</span><span class="tag tag-fix">FIX</span></div>
+      <div class="file i1"><span class="file-icon">📋</span><span class="file-name">.env.example</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/config/</div>
+      <div class="file i2"><span class="file-icon">🗄️</span><span class="file-name">db.js</span></div>
+      <div class="file i2"><span class="file-icon">⚡</span><span class="file-name">redis.js</span><span class="tag tag-fix">FIX</span></div>
+      <div class="file i2"><span class="file-icon">✅</span><span class="file-name">validateEnv.js</span><span class="tag tag-new">NEW</span></div>
+      <div class="file i2"><span class="file-icon">🗃️</span><span class="file-name">init.sql</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/middleware/</div>
+      <div class="file i2"><span class="file-icon">🔐</span><span class="file-name">auth.js</span></div>
+      <div class="file i2"><span class="file-icon">🚦</span><span class="file-name">rateLimiter.js</span><span class="tag tag-new">NEW</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/routes/</div>
+      <div class="file i2"><span class="file-icon">🔑</span><span class="file-name">auth.js</span></div>
+      <div class="file i2"><span class="file-icon">💬</span><span class="file-name">chats.js</span></div>
+      <div class="file i2"><span class="file-icon">📎</span><span class="file-name">upload.js</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/socket/</div>
+      <div class="file i2"><span class="file-icon">🔌</span><span class="file-name">index.js</span></div>
+
+      <hr class="divider">
+      <div class="section-label">Тесты</div>
+      <div class="file i1"><span class="file-icon">🧪</span><span class="file-name">__tests__/auth.test.js</span><span class="tag tag-test">TEST</span></div>
+      <div class="file i1"><span class="file-icon">🧪</span><span class="file-name">__tests__/chats.test.js</span><span class="tag tag-test">TEST</span></div>
+      <div class="file i1"><span class="file-icon">🧪</span><span class="file-name">__tests__/middleware.test.js</span><span class="tag tag-test">TEST</span></div>
+      <div class="file i1"><span class="file-icon">🧪</span><span class="file-name">__tests__/upload.test.js</span><span class="tag tag-test">TEST</span></div>
+      <div class="file i1"><span class="file-icon">🎭</span><span class="file-name">__mocks__/db.js</span><span class="tag tag-test">TEST</span></div>
+      <div class="file i1"><span class="file-icon">🎭</span><span class="file-name">__mocks__/redis.js</span><span class="tag tag-test">TEST</span></div>
+
+      <hr class="divider">
+      <div class="section-label">Файлы пользователей</div>
+      <div class="file i1"><span class="file-icon">📁</span><span class="file-name">uploads/</span></div>
+      <div class="file i2"><span class="file-icon">🖼️</span><span class="file-name dim">*.png, *.jpg …</span></div>
+      <div class="file i2"><span class="file-icon">📌</span><span class="file-name">.gitkeep</span><span class="tag tag-new">NEW</span></div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ FRONTEND ══════════════════════════════ -->
+  <div class="col">
+    <div class="col-header hdr-frontend">
+      <span class="icon">🌐</span> frontend/
+    </div>
+    <div class="col-body">
+
+      <div class="section-label">Корень</div>
+      <div class="file i1"><span class="file-icon">📄</span><span class="file-name">index.html</span></div>
+      <div class="file i1"><span class="file-icon">⚡</span><span class="file-name">vite.config.js</span></div>
+      <div class="file i1"><span class="file-icon">📦</span><span class="file-name">package.json</span></div>
+      <div class="file i1"><span class="file-icon">🐋</span><span class="file-name">Dockerfile</span></div>
+      <div class="file i1"><span class="file-icon">🚫</span><span class="file-name">.dockerignore</span><span class="tag tag-new">NEW</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/</div>
+      <div class="file i1"><span class="file-icon">🚀</span><span class="file-name">main.jsx</span></div>
+      <div class="file i1"><span class="file-icon">🎨</span><span class="file-name">index.css</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/pages/</div>
+      <div class="file i2"><span class="file-icon">🔑</span><span class="file-name">LoginPage.jsx</span></div>
+      <div class="file i2"><span class="file-icon">💬</span><span class="file-name">ChatPage.jsx</span><span class="tag tag-fix">FIX</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/api/</div>
+      <div class="file i2"><span class="file-icon">🔗</span><span class="file-name">client.js</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/socket/</div>
+      <div class="file i2"><span class="file-icon">🔌</span><span class="file-name">index.js</span></div>
+
+    </div>
+
+    <!-- mobile -->
+    <div class="col-header hdr-mobile" style="border-top: 1px solid #2d3748; border-radius: 0;">
+      <span class="icon">📱</span> mobile/
+    </div>
+    <div class="col-body">
+
+      <div class="section-label">Корень</div>
+      <div class="file i1"><span class="file-icon">🚀</span><span class="file-name">App.js</span></div>
+      <div class="file i1"><span class="file-icon">📄</span><span class="file-name">index.js</span></div>
+      <div class="file i1"><span class="file-icon">⚙️</span><span class="file-name">app.json</span></div>
+      <div class="file i1"><span class="file-icon">📦</span><span class="file-name">package.json</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/screens/</div>
+      <div class="file i2"><span class="file-icon">🔑</span><span class="file-name">LoginScreen.js</span></div>
+      <div class="file i2"><span class="file-icon">📋</span><span class="file-name">ChatsScreen.js</span></div>
+      <div class="file i2"><span class="file-icon">💬</span><span class="file-name">ChatScreen.js</span><span class="tag tag-fix">FIX</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/api/</div>
+      <div class="file i2"><span class="file-icon">🔗</span><span class="file-name">client.js</span></div>
+
+      <hr class="divider">
+      <div class="section-label">src/socket/</div>
+      <div class="file i2"><span class="file-icon">🔌</span><span class="file-name">index.js</span></div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ INFRA + ROOT ══════════════════════════ -->
+  <div class="col">
+    <div class="col-header hdr-infra">
+      <span class="icon">🏗️</span> nginx/
+    </div>
+    <div class="col-body">
+      <div class="file i1"><span class="file-icon">🐋</span><span class="file-name">Dockerfile</span><span class="tag tag-new">NEW</span></div>
+      <div class="file i1"><span class="file-icon">⚙️</span><span class="file-name">nginx.conf</span><span class="tag tag-fix">FIX</span></div>
+    </div>
+
+    <div class="col-header hdr-deploy" style="border-top: 1px solid #2d3748; border-radius: 0;">
+      <span class="icon">🚀</span> Корень проекта /
+    </div>
+    <div class="col-body">
+      <div class="file i1"><span class="file-icon">🐙</span><span class="file-name">.gitignore</span><span class="tag tag-new">NEW</span></div>
+      <div class="file i1"><span class="file-icon">🐋</span><span class="file-name">docker-compose.yml</span><span class="tag tag-fix">FIX</span></div>
+      <div class="file i1"><span class="file-icon">📖</span><span class="file-name">DEPLOY.md</span><span class="tag tag-new">NEW</span></div>
+      <div class="file i1"><span class="file-icon">🧠</span><span class="file-name">MEMORY.md</span><span class="tag tag-new">NEW</span></div>
+      <div class="file i1"><span class="file-icon">🤖</span><span class="file-name">CLAUDE.md</span><span class="tag tag-new">NEW</span></div>
+      <div class="file i1"><span class="file-icon">📘</span><span class="file-name">README.md</span></div>
+    </div>
+
+    <div class="col-header hdr-root" style="border-top: 1px solid #2d3748; border-radius: 0;">
+      <span class="icon">🗄️</span> Схема базы данных
+    </div>
+    <div class="col-body">
+      <div class="section-label">Таблицы (init.sql)</div>
+
+      <div class="file i1"><span class="file-icon">👤</span>
+        <div>
+          <div class="file-name">users</div>
+          <div style="font-size:10px;color:#4a5568;padding-left:0;margin-top:1px;">id · username · password · display_name · avatar_url · last_seen</div>
+        </div>
+      </div>
+      <div class="file i1"><span class="file-icon">💬</span>
+        <div>
+          <div class="file-name">chats</div>
+          <div style="font-size:10px;color:#4a5568;margin-top:1px;">id · name · is_group · created_at</div>
+        </div>
+      </div>
+      <div class="file i1"><span class="file-icon">👥</span>
+        <div>
+          <div class="file-name">chat_members</div>
+          <div style="font-size:10px;color:#4a5568;margin-top:1px;">chat_id · user_id (PK составной)</div>
+        </div>
+      </div>
+      <div class="file i1"><span class="file-icon">📨</span>
+        <div>
+          <div class="file-name">messages</div>
+          <div style="font-size:10px;color:#4a5568;margin-top:1px;">id · chat_id · sender_id · content · file_url · file_name · file_type</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="section-label">Socket.io события</div>
+      <div class="file i1"><span class="file-icon">📤</span><span class="file-name" style="color:#86efac;">message:send</span></div>
+      <div class="file i1"><span class="file-icon">📥</span><span class="file-name" style="color:#7dd3fc;">message:new</span></div>
+      <div class="file i1"><span class="file-icon">✏️</span><span class="file-name" style="color:#86efac;">typing:start / stop</span></div>
+      <div class="file i1"><span class="file-icon">🟢</span><span class="file-name" style="color:#7dd3fc;">user:online / offline</span></div>
+      <div class="file i1"><span class="file-icon">🚪</span><span class="file-name" style="color:#86efac;">chat:join</span></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- легенда -->
+<div class="legend">
+  <div class="legend-item"><span class="tag tag-new">NEW</span> Новый файл</div>
+  <div class="legend-item"><span class="tag tag-fix">FIX</span> Исправлен / обновлён</div>
+  <div class="legend-item"><span class="tag tag-test">TEST</span> Тесты (31 кейс)</div>
+  <div class="legend-item" style="color:#475569; font-size:11px;">· Файлы без тегов не менялись</div>
+</div>
+
+</body>
+</html>

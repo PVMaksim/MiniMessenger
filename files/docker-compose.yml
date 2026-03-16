@@ -1,0 +1,134 @@
+# docker-compose.yml — продакшен конфигурация
+#
+# Запуск:  docker compose up -d --build
+# Логи:    docker compose logs -f
+# Стоп:    docker compose down
+
+services:
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: mm_postgres
+    restart: always
+    env_file: ./backend/.env          # FIX: читаем DB_NAME / DB_USER / DB_PASSWORD отсюда
+    environment:
+      POSTGRES_DB:       ${DB_NAME}
+      POSTGRES_USER:     ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/config/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout:  5s
+      retries:  5
+      start_period: 20s
+
+  # ── Redis ─────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: mm_redis
+    restart: always
+    env_file: ./backend/.env          # читаем REDIS_PASSWORD
+    command: >
+      sh -c "redis-server
+      $${REDIS_PASSWORD:+--requirepass $${REDIS_PASSWORD}}"
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: >
+        sh -c "redis-cli
+        $${REDIS_PASSWORD:+-a $${REDIS_PASSWORD}}
+        ping | grep PONG"
+      interval: 10s
+      timeout:  5s
+      retries:  5
+
+  # ── Backend (Node.js) ─────────────────────────────────────────────────────
+  backend:
+    build:
+      context:    ./backend
+      dockerfile: Dockerfile
+    container_name: mm_backend
+    restart: always
+    env_file: ./backend/.env
+    environment:
+      DB_HOST:    postgres     # переопределяем хосты на имена сервисов Docker
+      REDIS_HOST: redis
+      NODE_ENV:   production
+    volumes:
+      - uploads_data:/app/uploads
+    networks:
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4000/health || exit 1"]
+      interval: 30s
+      timeout:  10s
+      retries:  3
+      start_period: 15s
+
+  # ── Nginx + Frontend (собираются вместе) ──────────────────────────────────
+  # FIX: вместо отдельного frontend-контейнера и shared volume —
+  # nginx/Dockerfile сам собирает React и кладёт статику внутрь образа.
+  # Нет race condition, нет пустого volume.
+  nginx:
+    build:
+      context:    .              # корень проекта (нужен доступ к frontend/)
+      dockerfile: nginx/Dockerfile
+    container_name: mm_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+      - uploads_data:/var/www/uploads:ro   # файлы пользователей (shared с backend)
+    networks:
+      - internal
+      - external
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      # FIX: проверяем только что nginx живой — не зависим от backend
+      test: ["CMD-SHELL", "wget -qO- http://localhost/nginx-health || exit 1"]
+      interval: 30s
+      timeout:  5s
+      retries:  3
+
+  # ── Certbot (обновление SSL, запускается вручную) ─────────────────────────
+  certbot:
+    image: certbot/certbot
+    container_name: mm_certbot
+    restart: "no"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+
+# ── Сети ─────────────────────────────────────────────────────────────────────
+networks:
+  internal:
+    driver: bridge
+  external:
+    driver: bridge
+
+# ── Тома ─────────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+  redis_data:
+  uploads_data:
+  certbot_www:
+  # FIX: frontend_static удалён — статика теперь внутри nginx-образа

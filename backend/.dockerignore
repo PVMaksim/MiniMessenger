@@ -1,0 +1,23 @@
+# backend/.dockerignore
+# Исключаем из Docker build context — ускоряет сборку образа
+
+node_modules/
+npm-debug.log*
+
+# Тестовые файлы не нужны в продакшен-образе
+__tests__/
+__mocks__/
+jest.config.js
+coverage/
+
+# Локальные конфиги
+.env
+.env.*
+!.env.example
+
+# Загруженные файлы (монтируются через volume)
+uploads/*
+!uploads/.gitkeep
+
+# macOS
+.DS_Store
